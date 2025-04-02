@@ -1,5 +1,6 @@
 import streamlit as st
-
+import pandas as pd
+import speech_recognition as sr
 
 # Load Patient Data (Simulated EHR Data)
 def load_patient_data():
@@ -18,11 +19,16 @@ st.title("Doctor Assist Dashboard")
 st.sidebar.header("Search Patient")
 search_id = st.sidebar.text_input("Enter Patient ID")
 if st.sidebar.button("Search"):
-    patient = patient_data[patient_data["Patient ID"] == search_id]
-    if not patient.empty:
-        st.write(patient)
+    try:
+        search_id = int(search_id)
+    except ValueError:
+        st.warning("Please enter a valid numeric Patient ID")
     else:
-        st.warning("Patient not found")
+        patient = patient_data[patient_data["Patient ID"].astype(str) == str(search_id)]
+        if not patient.empty:
+            st.write(patient)
+        else:
+            st.warning("Patient not found")
 
 # Voice-to-Text Notes
 st.header("Voice Notes")
@@ -46,7 +52,7 @@ if st.button("Record Voice Note"):
 # AI-Powered Patient History Summarizer
 st.header("Patient History Summarizer")
 def generate_summary(patient_id):
-    patient = patient_data[patient_data["Patient ID"] == patient_id]
+    patient = patient_data[patient_data["Patient ID"].astype(str) == str(patient_id)]
     if not patient.empty:
         history = f"Patient: {patient['Name'].values[0]}, Age: {patient['Age'].values[0]}, Diagnosis: {patient['Diagnosis'].values[0]}, Medications: {patient['Medications'].values[0]}, Notes: {patient['Notes'].values[0]}"
         return f"Summary: {history}"
