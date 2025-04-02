@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
 import speech_recognition as sr
-import openai
 
 # Load Patient Data (Simulated EHR Data)
 def load_patient_data():
     try:
-        return pd.read_csv("patient_history.csv")  # Replace with actual EHR integration
+        return pd.DataFrame(columns=["Patient ID", "Name", "Age", "Diagnosis", "Medications", "Notes"])
     except Exception as e:
         st.error(f"Error loading patient data: {e}")
         return pd.DataFrame(columns=["Patient ID", "Name", "Age", "Diagnosis", "Medications", "Notes"])
